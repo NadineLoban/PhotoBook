@@ -1,0 +1,7 @@
+﻿@model IEnumerable<DomainViewModels.ViewModels.PhotoSlideShowViewModel>
+<div class="fotorama">
+    @foreach (var url in Model)
+    {
+        <img src="@url.PhotoUrl">
+    }
+</div>

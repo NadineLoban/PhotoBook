@@ -1,0 +1,111 @@
+﻿@model DomainViewModels.ViewModels.AfterUploadPhotoViewModel
+
+@{
+//    ViewBag.Title = Resources.UIStrings.AddEffects;
+}
+
+<h2>AddEffect</h2>
+
+@using (Html.BeginForm()) {
+    @Html.ValidationSummary(true)
+
+    <fieldset>
+        <div class="row-fluid">
+        <div class="span6">
+            @Resources.UIStrings.OriginalPhoto
+            <img src="@Html.DisplayFor(model => model.OriginalPhoto.Url)" style="height: 400px;"/>
+        </div>
+            @Resources.UIStrings.PhotoWithFilter
+@*        <div class="span6"><img src="@Html.DisplayFor(model=> model.ModifiedPhoto.Url)" id="modifiedPhoto" style="height: 400px;"/></div>*@
+        <div class="span6"><img src="" id="modifiedPhoto" style="height: 400px;"/></div>
+@*        @Html.DropDownList("Эффекты", new SelectList(Model.EffectsViewModels , "EffectName" , "EffectShowName"), new {@onchange = "javascript:selectEffect('@Model.PhotoId')", @id="effect"})*@
+@*        @Html.DropDownList("Эффекты", new SelectList(Model.EffectsViewModels , "EffectName" , "EffectShowName"), new { @id="effect"})*@
+            @Html.DropDownListFor(model => model.EffectsViewModels, new SelectList(Model.EffectsViewModels , "EffectName" , "EffectShowName", new { @onchange="javascript:selectEffect()", @id="effect"}))
+
+            @Html.DropDownList(@Resources.UIStrings.Effects, new SelectList(Model.EffectsViewModels , "EffectName" , "EffectShowName"), new { @onchange="javascript:selectEffect()", @id="effect"})
+            @Html.HiddenFor(model => model.PublicId, new {@id = "publicId"})
+            
+            <div class="trans_row effects_row with_param">
+<h3>Look &amp; Feel</h3>
+<div class="trans_fields">
+<div class="trans_field">
+<span class="label">
+Effect:
+<a class="help_content" title="&lt;span class=&quot;field_name&quot;&gt;Effect&lt;/span&gt;Apply a filter or an effect on an image. The value includes the name of the effect and an additional parameter that controls the behavior of the specific effect.&lt;a href=&quot;/documentation/image_transformations#effect_parameter&quot; data-popup=&quot;true&quot;&gt;See reference&lt;/a&gt;"></a><span class="help">?</span>
+</span>
+<div class="selector fixedWidth" id="uniform-effects" style="width: 125px;"><span style="-webkit-user-select: none; width: 90px;">Gradient fade</span><select class="effects_field" id="effects" name="effects"><option value="">No effect</option>
+        <option value="grayscale">Grayscale</option>
+        <option value="blackwhite">Blackwhite</option>
+        <option value="sepia">Sepia</option>
+        <option value="brightness">Brightness</option>
+        <option value="saturation">Saturation</option>
+        <option value="hue">Hue</option>
+        <option value="oil_paint">Oil paint</option>
+        <option value="vignette">Vignette</option>
+        <option value="pixelate">Pixelate</option>
+        <option value="pixelate_faces">Pixelate faces</option>
+        <option value="gradient_fade">Gradient fade</option>
+        <option value="blur">Blur</option>
+        <option value="improve">Improve</option>
+        <option value="tilt_shift">Tilt shift</option>
+        <option value="sharpen">Sharpen</option>
+        <option value="unsharp_mask">Unsharp mask</option>
+        <option value="pixelate_region">Pixelate region</option>
+        <option value="red">Red</option>
+        <option value="blue">Blue</option>
+        <option value="green">Green</option>
+        <option value="contrast">Contrast</option>
+        <option value="vibrance">Vibrance</option>
+        <option value="auto_color">Auto color</option>
+        <option value="auto_brightness">Auto brightness</option>
+        <option value="auto_contrast">Auto contrast</option>
+        <option value="fill_light">Fill light</option>
+        <option value="blur_region">Blur region</option>
+        <option value="blur_faces">Blur faces</option>
+        <option value="make_transparent">Make transparent</option>
+        <option value="trim">Trim</option>
+        <option value="mask">Mask</option>
+        <option value="shadow">Shadow</option>
+        <option value="negate">Negate</option>
+        <option value="screen">Screen</option>
+        <option value="multiply">Multiply</option>
+        <option value="colorize">Colorize</option></select></div>
+        </div>
+        <div class="trans_field effects_param_holder">
+        <span class="label">&nbsp;</span>
+        <div class="slider effects_param_slider ui-slider ui-slider-horizontal ui-widget ui-widget-content ui-corner-all" aria-disabled="false"><a class="ui-slider-handle ui-state-default ui-corner-all" href="#" style="left: 0%;"></a></div>
+        <input class="with_slider effects_param_field" id="effects_param" name="effects_param" type="text" value="">
+        </div>
+        </div>
+        </div>
+        </div>
+
+        <p>
+            <input type="submit" value="Create" />
+        </p>
+    </fieldset>
+    <script>
+        function selectEffect() {
+            var effect = $("#effect").val();
+            var publicId = $("#publicId").val();
+            $.ajax({
+                url: '@Url.Action("SetEffect", "Photo")',
+                        type: 'GET',
+                        data: {
+                            publicId: publicId,
+                            effectName: effect
+                        },
+                        success: function (result) {
+                            $("img#modifiedPhoto").attr("src", result);
+                        },
+                        error: function (e) { display(e); }
+            });
+        }
+    </script>
+}
+
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

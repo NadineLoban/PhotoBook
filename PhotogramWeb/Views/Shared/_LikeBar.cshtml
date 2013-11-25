@@ -1,0 +1,38 @@
+﻿@model DomainViewModels.ViewModels.PhotoDetailedInfoViewModel
+<div class="span4 offset1">
+    @if (Request.IsAuthenticated && (Model.OwnerLogin.Equals(User.Identity.Name)))
+    {
+        <a class="btnAnchor" href="@Url.Action("Edit", "Photo", new {id = Model.PhotoId})">
+            <i class="glyphicon glyphicon-pencil"></i>
+        </a>
+        <i class="glyphicon glyphicon-thumbs-down"  title="@Model.AmountOfLikes" ></i>
+        <span class="badge">@Model.CommonRaiting</span>
+        <i class="glyphicon glyphicon-thumbs-up" title="@Model.AmountOfDislikes"></i>
+    }
+    else if (Request.IsAuthenticated)
+    {
+        if (!Model.IsLiked)
+        {
+            <a href="javascript: likePhoto('@Model.PhotoId')"><i class="glyphicon glyphicon-thumbs-up" title="@Model.AmountOfLikes"></i></a>
+        }
+        else
+        {
+            <i class="glyphicon glyphicon-thumbs-up" title="@Model.AmountOfLikes"></i>
+        }
+        <span class="badge">@Model.CommonRaiting</span>
+        if (!Model.IsDisliked)
+        {
+            <a href="javascript: dislikePhoto('@Model.PhotoId')"><i class="glyphicon glyphicon-thumbs-down" title="@Model.AmountOfDislikes" ></i></a>
+        }
+        else
+        {
+            <i class="glyphicon glyphicon-thumbs-down" title="@Model.AmountOfDislikes" ></i>
+        }
+    }
+    else
+    {
+        <i class="glyphicon glyphicon-thumbs-down" title="@Model.AmountOfLikes" ></i>
+        <span class="badge">@Model.CommonRaiting</span>
+        <i class="glyphicon glyphicon-thumbs-up" title="@Model.AmountOfDislikes"></i>
+    }
+</div>

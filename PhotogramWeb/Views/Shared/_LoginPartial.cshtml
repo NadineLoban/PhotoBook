@@ -1,0 +1,36 @@
+﻿@if (Request.IsAuthenticated) {
+    <script>
+    function submitForm()
+    {
+        document.getElementById('logoutForm').submit();
+    }
+    
+    </script>
+    <ul class="nav navbar-nav navbar-right">
+        @if (Request.IsAuthenticated) {
+            <li class="nav nav-pills">@Html.ActionLink(@Resources.UIStrings.AddPhoto, "Create", "Photo")</li>
+            <li class="nav nav-pills">@Html.ActionLink(@Resources.UIStrings.MyPhotos, "GetCurrentUserPhotos", "Photo")</li>
+        }
+        
+        <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">@Html.DisplayName(User.Identity.Name)<b class="caret"></b></a>
+            <ul class="dropdown-menu">
+                <li>@Html.ActionLink(@Resources.UIStrings.AddPhoto, "Create", "Photo")</li>
+                <li>@Html.ActionLink(@Resources.UIStrings.EditUserProfile, "Manage", "Account", routeValues: null, htmlAttributes: new { @class = "username", title = "Manage" })</li>
+                <li class="divider"></li>
+                <li>
+                    @Html.ActionLink(@Resources.UIStrings.Exit, "LogOff", "Account")
+                </li>
+            </ul>
+        </li>
+       
+    </ul>
+    
+}
+else
+{
+        <ul class="nav navbar-nav navbar-right">
+            <li>@Html.ActionLink(@Resources.UIStrings.RegisterButton, "Register", "Account", routeValues: null, htmlAttributes: new { id = "registerLink" })</li>
+            <li>@Html.ActionLink(@Resources.UIStrings.Enter, "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink" })</li>
+        </ul>
+}

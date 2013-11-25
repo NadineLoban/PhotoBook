@@ -1,0 +1,110 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <title>@ViewBag.Title - Photobook</title>
+        <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+        <meta name="viewport" content="width=device-width" />
+        <script src="http://code.jquery.com/jquery.js"></script>
+        <script src="../../Scripts/jquery-ui-1.10.3.custom.min.js"></script>
+        <link href="../../Content/fotorama.css" rel="stylesheet">
+        <script src="../../Scripts/fotorama.js"></script>
+        @Styles.Render("~/Content/css")
+        @Styles.Render("~/Content/tagit")
+        @Styles.Render("~/Content/themes/base/css")
+        @Styles.Render("~/Content/bootstrap")
+        @Scripts.Render("~/bundles/modernizr")
+        @Scripts.Render("~/bundles/bootstrap")
+        @Scripts.Render("~/bundles/jquery")
+        @Scripts.Render("~/bundles/jqueryui")
+        <script type="text/javascript">
+            jQuery(function($) {
+                $("#search").autocomplete({
+                    source: function(request, response) {
+                        $.ajax({
+                            type: "POST",
+                            url: '@Url.Action("GetUsers", "Account")',
+                            dataType: "json",
+                            contentType: "application/json; charset=utf-8",
+                            data:  "{'login':'" + $("#search").val()+ "'}" , //request.term + "'}",//$("#search").val()
+                            dataFilter: function (data) { return data; },
+                            success: function (data) {
+                                response($.map(data, function(item) {
+                                    return {
+                                        label: item,
+                                        value: item
+                                        
+                                    };
+                                }));
+                            },
+                            error: function(xhr, status, error) {
+                            }
+                        });
+                    },
+                    messages: {
+                        noResults: "", results: ""
+                    },
+                    select: function (event, ui) {
+                        $("#search").val(ui.item.label);
+                        window.location.href = "@Url.Action("GetAllUserPhotos", "Photo")" + "?userName=" + $("#search").val(); 
+                        return false;
+                    }
+                    
+                });
+            });
+        </script>
+    </head>
+
+    <body>
+        <header>
+            <div class="navbar navbar-default" role="navigation">
+                <div class="navbar-header">
+                    <button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#navbar-main">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    @Html.ActionLink("PhotoBook", "Index", "Home", null, new {@class="navbar-brand"})
+                </div>
+                
+                <div class="navbar-collapse collapse">
+                    
+                    <ul class="nav navbar-nav">
+                        <li class="nav nav-pills">@Html.ActionLink(@Resources.UIStrings.MostPopular, "ShowTheMostPopularPhotos", "Photo")</li>
+                    </ul>
+                    <form class="navbar-form navbar-left">
+                        <input type="text" class="form-control col-lg-8" id="search" placeholder="@Resources.UIStrings.SearchByLogin">
+                    </form>
+                     
+                    @Html.Partial("_LoginPartial")
+                    
+                </div>
+                
+            </div>
+        </header>
+        <div class="container-fluid">
+          <div class="row-fluid">
+            <div class="span3">
+                @Html.Action("GetTagClouds", "Home")  
+                @if (Request.IsAuthenticated)
+                {
+                    @Html.Action("ShowUsersPhotoSlideShow", "Photo")   
+                }
+@*                @Html.Action("GetTopTags", "Tag")*@
+
+            </div>
+            <div class="span9">
+              <div id="body"  >
+                    @RenderSection("featured", required: false)
+                    <section class="content-wrapper main-content clear-fix" >
+                        @RenderBody()
+                    </section>
+                </div>
+            </div>
+          </div>
+        </div>
+        @RenderSection("scripts", required: false)
+    </body>
+</html>
+
+

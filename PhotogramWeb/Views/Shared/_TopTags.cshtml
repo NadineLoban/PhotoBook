@@ -1,0 +1,58 @@
+﻿<script src="~/Scripts/Chart.js"></script>
+
+<div class="well">
+    <canvas id="tagsChart" width="300" height="150"></canvas>
+</div>
+
+<script>
+    $(function () {
+        $.ajax({
+            url: '@Url.Action("GetTop5Tags", "Tag")',
+            type: 'POST',
+            success: function(data) {
+                var ctx = document.getElementById("tagsChart").getContext("2d");
+                var datas = {
+                    labels: data.Tags,
+                    datasets: [
+                        {
+                            fillColor: "rgba(220,220,220,0.5)",
+                            strokeColor: "rgba(220,220,220,1)",
+                            data: data.Counts
+                        }
+                    ]
+                };
+
+                var chart = new Chart(ctx).Bar(datas, getDefaultOptions());
+            }
+        });
+    });
+    
+    function getDefaultOptions() {
+        return {
+            scaleOverlay: false,
+            scaleOverride: false,
+            scaleSteps: null,
+            scaleStepWidth: null,
+            scaleStartValue: 1,
+            scaleLineColor: "rgba(0,0,0,.1)",
+            scaleLineWidth: 1,
+            scaleShowLabels: true,
+            scaleLabel: "<%=value%>",
+            scaleFontFamily: "'Arial'",
+            scaleFontSize: 12,
+            scaleFontStyle: "normal",
+            scaleFontColor: "#666",
+            scaleShowGridLines: true,
+            scaleGridLineColor: "rgba(0,0,0,.05)",
+            scaleGridLineWidth: 1,
+            barShowStroke: true,
+            barStrokeWidth: 2,
+            barValueSpacing: 5,
+            barDatasetSpacing: 1,
+            animation: true,
+            animationSteps: 60,
+            animationEasing: "easeOutQuart",
+            onAnimationComplete: null
+        };
+    }
+</script>

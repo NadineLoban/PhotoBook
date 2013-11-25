@@ -1,0 +1,12 @@
+﻿@{
+    ViewBag.Title = "_TagClouds";
+}
+<div class="well">
+    @if (Model != null)
+    {
+        foreach (var tag in Model)
+        {
+            <a href="@Url.Action("ShowPhotosByTag", "Photo", new { tagName = tag.Name })"><span class="badge" style="background-color: #3fb618;">@tag.Name (@tag.Count)</span></a> 
+        }
+    }
+</div>

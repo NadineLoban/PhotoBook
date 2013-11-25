@@ -1,0 +1,72 @@
+﻿@model DomainViewModels.ViewModels.PhotoAddInfoViewModel
+
+@{
+    ViewBag.Title = @Resources.UIStrings.CreatePhoto;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval") 
+    
+}
+<h2>@ViewBag.Title</h2>
+@using (Html.BeginForm("Create", "Photo", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="well ">
+                    <fieldset>
+                        <div class="form-group" >
+                            @Html.Label(@Resources.UIStrings.UploadPhoto, new { @class = "control-label" })
+                            <input type="file" name="file" id="file" accept="image/gif, image/jpeg, image/png" class="col-lg-12 form-control" />
+                            @Html.LabelFor(m => m.Description, new { @class = "control-label"})
+                            @Html.TextAreaFor(model => model.Description, new { @class = "col-lg-12 form-control", @id="description" })
+                            @Html.LabelFor(model => model.TagsString, new { @class = "control-label"})
+                            @Html.TextBoxFor(model => model.TagsString, new { @id = "tags", @class = "col-lg-12 form-control"})
+                        </div>   
+                        <div class="form-group">
+                            <div class="col-lg-10 col-lg-offset-8">
+                                <button type="submit" class="btn btn-info">
+                                    @Resources.UIStrings.Save
+                                </button>
+                            </div>
+                        </div>
+                        
+                    </fieldset>
+                </div>
+        
+            </div>
+        </div>
+    
+    <script>
+    tag = [];
+    $('#tags').tagit({
+        autocomplete: {
+            source: function (request, response) {
+                $.ajax({
+                    type:"POST",
+                    url: '@Url.Action("GelAllTags", "Tag")',
+                    dataType: "json",
+                    data: {
+                        term: request.term
+                    },
+                    success: function (data) {
+                        response($.map(data, function (item) {
+                            return {
+                                label: item,
+                                value: item
+                            };
+                        }));
+                    },
+                    error: function (xhr, status, error) {
+                    }
+                });
+            }
+        },
+        minLength: 2
+    });
+</script>  
+}  
+
+
+

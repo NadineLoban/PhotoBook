@@ -1,0 +1,74 @@
+﻿@model DomainViewModels.ViewModels.PhotoDetailedInfoViewModel
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}  
+@{
+    <div class="well">
+        @if (Request.IsAuthenticated && (Model.OwnerLogin.Equals(User.Identity.Name)))
+        {
+            <a href="@Url.Action("DeletePhoto", "Photo", new {photoId = Model.PhotoId})"><i class="glyphicon glyphicon-remove pull-right"  style="font-size: 20px; color: #333;"></i></a>
+        }
+        <div class="row-fluid">
+            <div class="span8">
+                <img src="@Model.PhotoUrl"/>
+                
+                <div class="row-fluid" style="padding-top: 5px;">
+                    <div id="likeBar">
+                        @Html.Partial("_LikeBar", Model)
+                    </div>
+                    <div class="offset4 span3">
+                        <a href="@Url.Action("GetAllUserPhotos", "Photo", new {userName = Model.OwnerLogin})"><span class="label label-primary">@Model.OwnerLogin</span></a>
+                    </div>
+                </div>
+            </div>
+            <div class="span4">
+                <div class="alert alert-dismissable">
+                    <h3>@Resources.UIStrings.Description</h3>
+                    <br/>
+                    @Html.DisplayFor(model => model.Description)
+                </div>
+                <div class="alert alert-dismissable">
+                    <h3>@Resources.UIStrings.Tags</h3>
+                    <br/>
+                    @foreach (var tag in Model.TagSimpleViewModels)
+                    {
+                        <a href="@Url.Action("ShowPhotosByTag", "Photo", new {tagName = tag.Name})"><span class="label label-success">@tag.Name</span></a>
+                    }   
+                </div>	
+            </div>
+        </div>
+    
+    </div>
+}
+
+<script>
+        function likePhoto(photoId) {
+            $.ajax({
+                url: '@Url.Action("LikePhotoDetailed", "Photo")',
+            type: 'GET',
+            data: { photoId: photoId },
+            success: function (data) {
+                $("#likeBar").html(data);
+            },
+            error: function () {
+                //   $("#result-list-index").html("An error occurred while trying to retrieve your data.");
+            }
+        });
+    }
+</script>
+<script>
+    function dislikePhoto(photoId) {
+        $.ajax({
+            url: '@Url.Action("DislikePhotoDetailed", "Photo")',
+            type: 'GET',
+            data: { photoId: photoId },
+            success: function (data) {
+                $("#likeBar").html(data);
+            },
+            error: function () {
+                //  $("#result-list-index").html("An error occurred while trying to retrieve your data.");
+            }
+        });
+    }
+</script>

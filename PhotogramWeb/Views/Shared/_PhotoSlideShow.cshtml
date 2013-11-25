@@ -1,0 +1,14 @@
+﻿@model IEnumerable<String>
+<script src="~/Scripts/jquery.cycle2.min.js"></script>
+
+<div id="shuffle" class="well">
+    <div class="row"></div>     
+    @foreach (var photoUrl in Model)
+    {
+        <img src="@photoUrl" class="thumbnail"/>
+    }
+</div>
+
+<script>
+    $('div#shuffle').cycle();
+</script>

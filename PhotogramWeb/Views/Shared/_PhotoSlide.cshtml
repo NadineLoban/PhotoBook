@@ -1,0 +1,7 @@
+﻿@model IEnumerable<DomainViewModels.ViewModels.PhotoCommonInfoViewModel>
+<div class="fotorama">
+    @foreach (var url in Model)
+    {
+        <img src="@url.PhotoUrl" style="height: 512px;">
+    }
+</div>

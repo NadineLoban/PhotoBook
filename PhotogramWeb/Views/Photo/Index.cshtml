@@ -1,0 +1,15 @@
+﻿@model IEnumerable<DomainViewModels.ViewModels.PhotoCommonInfoViewModel>
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Index</h2>
+@if (Model != null)
+{
+    @Html.Action("PhotoSlide", "Photo", Model);
+}
+else
+{
+    <label>No photo</label>
+}

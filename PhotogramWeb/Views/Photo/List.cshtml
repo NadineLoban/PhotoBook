@@ -1,0 +1,61 @@
+﻿@model IEnumerable<DomainViewModels.ViewModels.PhotoCommonInfoViewModel>
+
+@{
+    ViewBag.Title = @Resources.UIStrings.Photos;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@{
+    <h4><a href="#myModal" role="button" class="btn-toolbar" data-toggle="modal">@Resources.UIStrings.StartSlideShow</a></h4>
+    <div class="modal " id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" align="center">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+      </div>
+      <div class="modal-body">
+        <p>@Html.Partial("_PhotoSlide", Model)</p>
+      </div>
+    </div>
+    <br/><br/>
+    var tiles = Model.Count() / 3 + 1;
+    for (var i = 0; i < tiles; i++)
+    {
+        <div class="row">
+            @foreach (var photo in Model.Skip(i * 3).Take(3))
+            {
+                <div id="@photo.PhotoId" class="span4">
+                    @Html.Partial("_PhotoCommonView", photo)
+                </div>
+            }
+        </div>
+    }
+}
+
+<script>
+    function likePhoto(photoId) {
+        $.ajax({
+            url: '@Url.Action("LikePhoto", "Photo")',
+            type: 'GET',
+            data: { photoId: photoId },
+            success: function (data) {
+                $("#" + photoId).html(data);
+            },
+            error: function () {
+                //   $("#result-list-index").html("An error occurred while trying to retrieve your data.");
+            }
+        });
+    }
+</script>
+<script>
+    function dislikePhoto(photoId) {
+        $.ajax({
+            url: '@Url.Action("DislikePhoto", "Photo")',
+            type: 'GET',
+            data: { photoId: photoId },
+            success: function (data) {
+                $("#" + photoId).html(data);
+            },
+            error: function() {
+                //  $("#result-list-index").html("An error occurred while trying to retrieve your data.");
+            }
+        });
+    }
+</script>
